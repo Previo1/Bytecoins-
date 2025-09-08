@@ -1,0 +1,25 @@
+version: "3"
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: bytecoin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+  node:
+    build: .
+    command: python3 bytecoin_node_persistent.py
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+  ui:
+    build: ./ui
+    ports:
+      - "3000:3000"
+    depends_on:
+      - node
